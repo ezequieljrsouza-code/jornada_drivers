@@ -20,6 +20,55 @@ header{background:var(--dark);padding:0 28px;height:68px;display:grid;grid-templ
 .header-title{color:var(--yellow);font-size:1.05rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;text-align:center}
 .header-right{display:flex;justify-content:flex-end;align-items:center;gap:10px}
 
+/* ── HEADER UPLOAD BTN ── */
+.header-upload-btn{display:flex;align-items:center;gap:7px;background:var(--yellow);border:none;border-radius:7px;padding:7px 14px;cursor:pointer;font-size:.75rem;font-weight:800;color:var(--dark);white-space:nowrap;transition:all .15s;max-width:200px;overflow:hidden}
+.header-upload-btn:hover{background:#ffd000;box-shadow:0 0 0 2px rgba(255,255,255,.4)}
+.header-upload-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── PERIOD OFFENDER CARD ── */
+.period-offender-card{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:24px;border-left:5px solid var(--red)}
+.period-offender-filters{display:flex;align-items:flex-end;gap:14px;padding:12px 18px;background:var(--red-bg);flex-wrap:wrap;border-bottom:1px solid #fcc}
+.period-offender-filters .filter-group label{color:#a00}
+.period-offender-filters .filter-group select,.period-offender-filters .filter-group input{border-color:#f99;min-width:130px}
+.period-offender-filters .btn-filter{background:var(--red);color:#fff}
+.period-offender-filters .btn-filter:hover{background:#c62828}
+.period-offender-body{padding:16px 18px}
+.top-offender-banner{display:flex;align-items:center;gap:18px;background:var(--red-bg);border:2px solid var(--red);border-radius:10px;padding:14px 20px;margin-bottom:14px}
+.top-offender-badge{background:var(--red);color:#fff;border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;flex-shrink:0}
+.top-offender-info{flex:1}
+.top-offender-id{font-size:1.3rem;font-weight:900;color:var(--red)}
+.top-offender-mlp{font-size:.8rem;font-weight:700;color:#a00;margin-top:2px}
+.top-offender-stats{display:flex;gap:18px;margin-top:6px;flex-wrap:wrap}
+.top-offender-stat{text-align:center}
+.top-offender-stat-val{font-size:1.1rem;font-weight:900;color:var(--dark)}
+.top-offender-stat-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g600)}
+.period-offender-list{display:flex;flex-wrap:wrap;gap:8px}
+.period-offender-pill{display:inline-flex;align-items:center;gap:7px;background:var(--red-bg);border:1.5px solid var(--red);border-radius:8px;padding:6px 12px;font-size:.78rem;cursor:pointer;transition:all .15s}
+.period-offender-pill:hover{background:var(--red);color:#fff}
+.period-offender-pill:hover .pop-days{background:rgba(255,255,255,.25);color:#fff}
+.period-offender-pill:hover .pop-mlp{color:#ffb3b0}
+.period-offender-pill:hover .pop-id{color:#fff}
+.pop-id{font-weight:800;color:var(--red);font-size:.82rem}
+.pop-mlp{font-size:.68rem;color:#a00;font-weight:600}
+.pop-days{background:var(--red);color:#fff;border-radius:5px;padding:1px 6px;font-size:.7rem;font-weight:800}
+
+/* ── DRIVER SEARCH CARD ── */
+.driver-search-card{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:24px}
+.driver-search-body{padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.driver-id-input-wrap{position:relative;flex:1;max-width:320px}
+.driver-id-input-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--g400)}
+.driver-id-input{width:100%;padding:9px 12px 9px 34px;border:2px solid var(--dark);border-radius:7px;font-size:.9rem;font-weight:700;color:var(--dark);outline:none;background:#fff}
+.driver-id-input:focus{box-shadow:0 0 0 3px rgba(0,0,0,.12)}
+.driver-profile{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:10px;padding:12px 16px;background:var(--g100);border-radius:8px;border:1.5px solid var(--g200)}
+.driver-profile-id{font-size:1.5rem;font-weight:900;color:var(--dark)}
+.driver-profile-stats{display:flex;gap:16px;flex-wrap:wrap}
+.dp-stat{background:#fff;border-radius:7px;padding:8px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.dp-stat-val{font-size:1.1rem;font-weight:900;color:var(--dark)}
+.dp-stat-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g600)}
+.dp-stat.alert .dp-stat-val{color:var(--red)}
+.dp-stat.ok .dp-stat-val{color:var(--green)}
+
+
 /* ── UPLOAD BAR ── */
 .upload-bar{background:var(--yellow);padding:10px 28px;display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--dark);flex-wrap:wrap}
 .upload-zone{display:flex;align-items:center;gap:9px;background:#fff;border:2px dashed var(--dark);border-radius:8px;padding:7px 16px;cursor:pointer;font-size:.8rem;font-weight:700;color:var(--dark);transition:all .15s;white-space:nowrap}
@@ -154,6 +203,11 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
   </div>
   <div class="header-title">Controle de Jornada Drivers SPA1</div>
   <div class="header-right">
+    <div class="header-upload-btn" onclick="document.getElementById('fileInputHeader').click()" title="Importar novo arquivo .xlsx ou .csv">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span id="headerUploadLabel">Importar .xlsx / .csv</span>
+    </div>
+    <input type="file" id="fileInputHeader" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(this.files[0]);document.getElementById('headerUploadLabel').textContent=this.files[0]?this.files[0].name:'Importar .xlsx / .csv'">
   </div>
 </header>
 
@@ -188,6 +242,43 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
       <div class="kpi-card"><div class="kpi-label">Máx. Consecutivos</div><div class="kpi-value" id="j-kMax">—</div><div class="kpi-sub">dias registrados</div></div>
       <div class="kpi-card"><div class="kpi-label">MLP Mais Ofensora</div><div class="kpi-value" style="font-size:1rem" id="j-kMLP">—</div><div class="kpi-sub" id="j-kMLPs">—</div></div>
     </div>
+    <!-- ── DRIVER MAIS OFENSOR POR PERÍODO ── -->
+    <div class="period-offender-card">
+      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;background:var(--red-bg);">
+        <span class="card-title" style="border-left-color:var(--red)">🔴 Driver Mais Ofensor por Período — acima de 7 dias trabalhados</span>
+        <span style="font-size:.7rem;color:#a00;font-style:italic">Filtre por período para identificar o principal infrator</span>
+      </div>
+      <div class="period-offender-filters">
+        <div class="filter-group"><label>Data Início</label><input type="date" id="po-dtStart" style="min-width:140px"></div>
+        <div class="filter-group"><label>Data Fim</label><input type="date" id="po-dtEnd" style="min-width:140px"></div>
+        <div class="filter-group"><label>MLP</label><select id="po-fMLP" style="min-width:140px"><option value="">Todas</option></select></div>
+        <div class="filter-group"><label>Mín. dias consec.</label><input type="number" id="po-fMin" min="1" max="30" value="7" style="min-width:100px"></div>
+        <button class="btn-filter" onclick="renderPeriodOffender()">Analisar</button>
+        <button class="btn-clear" onclick="clearPeriodOffender()" style="border-color:#f99;color:#a00">Limpar</button>
+      </div>
+      <div class="period-offender-body" id="po-body">
+        <div style="color:var(--g400);font-style:italic;font-size:.82rem">Selecione um período e clique em Analisar para ver o driver mais ofensor.</div>
+      </div>
+    </div>
+
+    <!-- ── PESQUISA INDIVIDUAL DE DRIVER ── -->
+    <div class="driver-search-card">
+      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between">
+        <span class="card-title">🔍 Pesquisa Individual de Driver</span>
+        <span style="font-size:.7rem;color:var(--g600);font-style:italic">Digite o ID ou parte do nome/placa para ver o perfil completo</span>
+      </div>
+      <div style="padding:14px 18px">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div class="driver-id-input-wrap">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="driver-id-input" id="driverSearchInput" placeholder="ID do driver, placa, MLP…" oninput="renderDriverProfile(this.value)">
+          </div>
+          <button class="btn-clear" onclick="document.getElementById('driverSearchInput').value='';renderDriverProfile('')">Limpar</button>
+        </div>
+        <div id="driver-profile-area" style="margin-top:12px"></div>
+      </div>
+    </div>
+
     <div class="offenders-card">
       <div class="card-header" style="display:flex;align-items:center;justify-content:space-between">
         <span class="card-title">🔴 Drivers Mais Ofensores — IDs com &gt;7 dias consecutivos</span>
@@ -380,6 +471,19 @@ function jPopulate(src) {
   sm.innerHTML='<option value="">Todos</option>'+mlps.map(v=>`<option>${v}</option>`).join('');
   sc.innerHTML='<option value="">Todos</option>'+canais.map(v=>`<option>${v}</option>`).join('');
   if(cv)sm.value=cv; if(cv2)sc.value=cv2;
+  // Also populate period offender MLP filter
+  const poMLP = document.getElementById('po-fMLP');
+  const poCV = poMLP.value;
+  poMLP.innerHTML='<option value="">Todas</option>'+mlps.map(v=>`<option>${v}</option>`).join('');
+  if(poCV) poMLP.value=poCV;
+  // Set default date range for period offender from data
+  const dates = DSR_RAW.map(r=>r._date_iso).filter(Boolean).sort();
+  if (dates.length) {
+    const poStart = document.getElementById('po-dtStart');
+    const poEnd   = document.getElementById('po-dtEnd');
+    if (!poStart.value) poStart.value = dates[0];
+    if (!poEnd.value)   poEnd.value   = dates[dates.length-1];
+  }
 }
 
 function jApply() {
@@ -507,7 +611,165 @@ function filterByDriver(driverId) {
   document.getElementById('j-tbody').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-function jRender() {
+// ═══════════════════════════════════════════════════════════════
+//  PERIOD OFFENDER — Driver Mais Ofensor por Período
+// ═══════════════════════════════════════════════════════════════
+function renderPeriodOffender() {
+  const dtStart = document.getElementById('po-dtStart').value;
+  const dtEnd   = document.getElementById('po-dtEnd').value;
+  const mlp     = document.getElementById('po-fMLP').value;
+  const minDays = parseInt(document.getElementById('po-fMin').value) || 7;
+  const body    = document.getElementById('po-body');
+
+  // Filter raw data by period + MLP
+  let rows = DSR_RAW.filter(r => {
+    const d = r._date_iso || '';
+    if (dtStart && d < dtStart) return false;
+    if (dtEnd   && d > dtEnd)   return false;
+    if (mlp     && r.MLP !== mlp) return false;
+    return true;
+  });
+
+  if (!rows.length) {
+    body.innerHTML = '<div style="color:var(--g400);font-style:italic;font-size:.82rem">Nenhum dado encontrado para o período/filtros selecionados.</div>';
+    return;
+  }
+
+  // Recalculate journey for filtered set
+  const journey = recalcJourney(rows);
+  const alertDrivers = journey.filter(r => r.max_consecutivos > minDays)
+                               .sort((a,b) => b.max_consecutivos - a.max_consecutivos);
+
+  if (!alertDrivers.length) {
+    body.innerHTML = `<div style="color:var(--green);font-weight:700;font-size:.85rem">✓ Nenhum driver com mais de ${minDays} dias consecutivos no período selecionado.</div>`;
+    return;
+  }
+
+  const top = alertDrivers[0];
+  const periodLabel = dtStart || dtEnd
+    ? `${dtStart ? fmtDate(dtStart) : '…'} → ${dtEnd ? fmtDate(dtEnd) : '…'}`
+    : 'Todo o período';
+
+  let html = `
+    <div class="top-offender-banner">
+      <div class="top-offender-badge">🏆</div>
+      <div class="top-offender-info">
+        <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#a00;margin-bottom:2px">Driver Mais Ofensor no Período: ${periodLabel}</div>
+        <div class="top-offender-id">Driver ${top.driver}</div>
+        <div class="top-offender-mlp">${top.mlp} · ${top.canal}</div>
+        <div class="top-offender-stats">
+          <div class="top-offender-stat"><div class="top-offender-stat-val" style="color:var(--red)">${top.max_consecutivos}</div><div class="top-offender-stat-lbl">Dias Consecutivos</div></div>
+          <div class="top-offender-stat"><div class="top-offender-stat-val">${top.total_dias}</div><div class="top-offender-stat-lbl">Total de Dias</div></div>
+          <div class="top-offender-stat"><div class="top-offender-stat-val">${top.total_rotas}</div><div class="top-offender-stat-lbl">Total de Rotas</div></div>
+          <div class="top-offender-stat"><div class="top-offender-stat-val" style="font-size:.85rem">${top.streak_inicio ? fmtDate(top.streak_inicio)+' → '+fmtDate(top.streak_fim) : '—'}</div><div class="top-offender-stat-lbl">Maior Sequência</div></div>
+        </div>
+      </div>
+      <button class="btn-filter" style="align-self:flex-start;white-space:nowrap" onclick="filterByDriver('${top.driver}')">Ver na tabela →</button>
+    </div>`;
+
+  if (alertDrivers.length > 1) {
+    html += `<div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--g600);margin-bottom:8px">Outros ${alertDrivers.length-1} driver(s) acima de ${minDays} dias:</div>`;
+    html += '<div class="period-offender-list">' +
+      alertDrivers.slice(1, 20).map(r => `
+        <div class="period-offender-pill" onclick="filterByDriver('${r.driver}')" title="${r.mlp} | ${r.canal}">
+          <div>
+            <div class="pop-id">${r.driver}</div>
+            <div class="pop-mlp">${r.mlp}</div>
+          </div>
+          <span class="pop-days">${r.max_consecutivos}d</span>
+        </div>`).join('') +
+      '</div>';
+  }
+
+  body.innerHTML = html;
+}
+
+function clearPeriodOffender() {
+  document.getElementById('po-dtStart').value = '';
+  document.getElementById('po-dtEnd').value = '';
+  document.getElementById('po-fMLP').value = '';
+  document.getElementById('po-fMin').value = '7';
+  document.getElementById('po-body').innerHTML = '<div style="color:var(--g400);font-style:italic;font-size:.82rem">Selecione um período e clique em Analisar para ver o driver mais ofensor.</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  DRIVER PROFILE SEARCH — Pesquisa Individual de Driver
+// ═══════════════════════════════════════════════════════════════
+function renderDriverProfile(query) {
+  const area = document.getElementById('driver-profile-area');
+  const q = (query||'').trim().toLowerCase();
+
+  if (!q || q.length < 2) {
+    area.innerHTML = '';
+    return;
+  }
+
+  // Search in JOURNEY_RAW
+  const matches = JOURNEY_RAW.filter(r =>
+    String(r.driver).toLowerCase().includes(q) ||
+    String(r.mlp).toLowerCase().includes(q) ||
+    String(r.placas).toLowerCase().includes(q) ||
+    String(r.canal).toLowerCase().includes(q)
+  ).slice(0, 10);
+
+  if (!matches.length) {
+    area.innerHTML = '<div style="color:var(--g400);font-style:italic;font-size:.82rem;padding:8px 0">Nenhum driver encontrado para "'+query+'"</div>';
+    return;
+  }
+
+  let html = '<div style="display:flex;flex-direction:column;gap:10px">';
+  for (const r of matches) {
+    const alertClass = r.alerta ? 'alert' : 'ok';
+    const alertLabel = r.alerta ? '⚠ ALERTA' : '✓ OK';
+    const alertColor = r.alerta ? 'var(--red)' : 'var(--green)';
+    // Get all routes for this driver
+    const driverRoutes = DSR_RAW.filter(row => String(row.Driver) === String(r.driver));
+    const totalInsuc = driverRoutes.reduce((s, row) => s + (parseInt(row['Total de Insucessos'])||0), 0);
+    const totalPkg   = driverRoutes.reduce((s, row) => s + (parseInt(row['Pacotes'])||0), 0);
+    const avgDS      = driverRoutes.length ? (driverRoutes.reduce((s, row) => s + (parseFloat(row.DS)||0), 0) / driverRoutes.length * 100).toFixed(1) : '—';
+
+    html += `
+      <div class="driver-profile" style="border-color:${alertColor};border-left:4px solid ${alertColor}">
+        <div>
+          <div class="driver-profile-id">Driver ${r.driver}</div>
+          <div style="font-size:.75rem;font-weight:700;color:#555;margin-top:2px">${r.mlp} · ${r.canal}</div>
+          <div style="font-size:.68rem;color:var(--g600);margin-top:2px">Placa(s): ${r.placas||'—'}</div>
+        </div>
+        <div class="driver-profile-stats">
+          <div class="dp-stat ${alertClass}">
+            <div class="dp-stat-val">${r.max_consecutivos}</div>
+            <div class="dp-stat-lbl">Dias Consec.</div>
+          </div>
+          <div class="dp-stat">
+            <div class="dp-stat-val">${r.total_dias}</div>
+            <div class="dp-stat-lbl">Total Dias</div>
+          </div>
+          <div class="dp-stat">
+            <div class="dp-stat-val">${r.total_rotas}</div>
+            <div class="dp-stat-lbl">Total Rotas</div>
+          </div>
+          <div class="dp-stat">
+            <div class="dp-stat-val">${totalInsuc}</div>
+            <div class="dp-stat-lbl">Insucessos</div>
+          </div>
+          <div class="dp-stat">
+            <div class="dp-stat-val">${avgDS}%</div>
+            <div class="dp-stat-lbl">DS Médio</div>
+          </div>
+          <div class="dp-stat" style="background:${alertColor}22;border:1px solid ${alertColor}">
+            <div class="dp-stat-val" style="color:${alertColor}">${alertLabel}</div>
+            <div class="dp-stat-lbl">${r.streak_inicio ? fmtDate(r.streak_inicio)+' → '+fmtDate(r.streak_fim) : 'sem sequência'}</div>
+          </div>
+        </div>
+        <button class="btn-filter" style="align-self:flex-start;white-space:nowrap" onclick="filterByDriver('${r.driver}');document.getElementById('driver-profile-area').innerHTML=''">Ver na tabela →</button>
+      </div>`;
+  }
+  html += '</div>';
+  if (matches.length === 10) html += '<div style="font-size:.72rem;color:var(--g400);margin-top:6px;font-style:italic">Exibindo os 10 primeiros resultados. Refine a pesquisa para ver menos.</div>';
+  area.innerHTML = html;
+}
+
+
   let src=[...jFiltered];
   if(jSearch) src=src.filter(r=>Object.values(r).some(v=>String(v??'').toLowerCase().includes(jSearch)));
   src.sort((a,b)=>{ let va=a[jSortCol]??'', vb=b[jSortCol]??''; if(typeof va==='number'&&typeof vb==='number') return(va-vb)*jSortDir; return String(va).localeCompare(String(vb),'pt-BR')*jSortDir; });
