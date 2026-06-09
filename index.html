@@ -28,10 +28,7 @@ header{background:var(--dark);padding:0 28px;height:68px;display:grid;grid-templ
 #uploadStatus{font-size:.76rem;font-weight:700;color:var(--dark)}
 #uploadStatus.ok{color:#00640a}
 #uploadStatus.err{color:var(--red)}
-.fb-status{font-size:.72rem;font-weight:600;padding:4px 10px;border-radius:12px;background:rgba(0,0,0,.1)}
-.fb-status.saving{color:#555}
-.fb-status.saved{color:#006400}
-.fb-status.err{color:var(--red)}
+
 
 /* ── TABS ── */
 
@@ -134,6 +131,18 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
 .op-days{background:var(--red);color:#fff;border-radius:5px;padding:1px 6px;font-size:.7rem;font-weight:800}
 .offenders-empty{padding:14px 18px;font-size:.82rem;color:var(--g400);font-style:italic}
 
+/* ── INSUCESSOS OFFENDERS ── */
+.insuc-card{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:24px}
+.insuc-list{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px}
+.insuc-pill{display:inline-flex;align-items:center;gap:8px;background:#fff3e0;border:1.5px solid var(--orange);border-radius:8px;padding:7px 13px;font-size:.78rem;cursor:pointer;transition:all .15s}
+.insuc-pill:hover{background:var(--orange);color:#fff}
+.insuc-pill:hover .ip-mlp{color:#ffe0b2}
+.insuc-pill:hover .ip-id{color:#fff}
+.insuc-pill:hover .ip-badge{background:rgba(255,255,255,.25);color:#fff}
+.ip-id{font-weight:800;color:var(--orange);font-size:.83rem}
+.ip-mlp{font-size:.67rem;color:#bf360c;font-weight:600}
+.ip-badge{background:var(--orange);color:#fff;border-radius:5px;padding:1px 7px;font-size:.7rem;font-weight:800;white-space:nowrap}
+
 </style>
 </head>
 <body>
@@ -145,7 +154,6 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
   </div>
   <div class="header-title">Controle de Jornada Drivers SPA1</div>
   <div class="header-right">
-    <span class="fb-status" id="fbStatus">Firebase</span>
   </div>
 </header>
 
@@ -189,6 +197,16 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
         <div class="offenders-empty">Carregando…</div>
       </div>
     </div>
+    <!-- ── DRIVERS MAIS OFENSORES POR INSUCESSOS ── -->
+    <div class="insuc-card">
+      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between">
+        <span class="card-title">🟠 Drivers Mais Ofensores — IDs por Total de Insucessos</span>
+        <span style="font-size:.7rem;color:var(--g600);font-style:italic">Clique no ID para filtrar na tabela</span>
+      </div>
+      <div id="j-insucessos-offenders">
+        <div class="offenders-empty">Carregando…</div>
+      </div>
+    </div>
     <div class="two-col">
       <div class="chart-card"><div class="card-header"><span class="card-title">Transportadoras Mais Ofensoras</span></div><div class="chart-body" id="j-mlpChart"></div></div>
       <div class="chart-card"><div class="card-header"><span class="card-title">Distribuição por Canal</span></div><div class="chart-body" id="j-canalChart"></div></div>
@@ -222,27 +240,6 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-//  FIREBASE CONFIG
-// ═══════════════════════════════════════════════════════════════
-const FB_URL = 'https://controlejornadadrivers-default-rtdb.firebaseio.com';
-
-function fbSet(path, data) {
-  return fetch(`${FB_URL}/${path}.json`, {
-    method: 'PUT',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(data)
-  }).then(r => r.json());
-}
-function fbGet(path) {
-  return fetch(`${FB_URL}/${path}.json`).then(r => r.json());
-}
-
-function fbStatus(msg, cls) {
-  const el = document.getElementById('fbStatus');
-  el.textContent = msg;
-  el.className = 'fb-status ' + (cls||'');
-}
 
 // ═══════════════════════════════════════════════════════════════
 //  GLOBAL DATA
@@ -335,7 +332,6 @@ function handleFile(file) {
       st.className='ok'; st.textContent = rows.length.toLocaleString('pt-BR')+' registros carregados ✓';
       
       jPopulate(JOURNEY_RAW); jClear();
-      saveToFirebase();
     } catch(err) { st.className='err'; st.textContent='Erro: '+err.message; }
   };
   if (ext==='csv') reader.readAsText(file,'utf-8');
@@ -361,71 +357,6 @@ function parseDateStr(s) {
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
   if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) { const [d,mo,y]=s.split('/'); return y+'-'+mo+'-'+d; }
   return '';
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  FIREBASE SAVE / LOAD
-// ═══════════════════════════════════════════════════════════════
-let fbSaveTimer = null;
-function saveToFirebase() {
-  clearTimeout(fbSaveTimer);
-  fbStatus('Salvando…','saving');
-  fbSaveTimer = setTimeout(async () => {
-    try {
-      // Chunk data into batches to avoid 10MB Firebase limit
-      const chunkSize = 200;
-      const chunks = [];
-      for (let i=0; i<DSR_RAW.length; i+=chunkSize) chunks.push(DSR_RAW.slice(i,i+chunkSize));
-      await fbSet('data/meta', {total: DSR_RAW.length, chunks: chunks.length, updated: new Date().toISOString()});
-      for (let i=0; i<chunks.length; i++) await fbSet(`data/chunk_${i}`, chunks[i]);
-      fbStatus('☁ Salvo','saved');
-      setTimeout(()=>fbStatus('Firebase'),3000);
-    } catch(e) { fbStatus('Erro ao salvar','err'); }
-  }, 800);
-}
-
-async function loadFromFirebase() {
-  fbStatus('Carregando…','saving');
-  
-  // Timeout para evitar travamento caso Firebase não responda (ex: CORS bloqueado)
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Timeout ao conectar ao Firebase')), 5000)
-  );
-  
-  try {
-    const meta = await Promise.race([fbGet('data/meta'), timeout]);
-    if (!meta || !meta.chunks) {
-      fbStatus('Dados locais','saved');
-      // Usa dados embutidos no HTML
-      jPopulate(JOURNEY_RAW); jClear();
-      setTimeout(()=>fbStatus('Firebase'),3000);
-      return;
-    }
-    let rows = [];
-    for (let i=0; i<meta.chunks; i++) {
-      const chunk = await fbGet(`data/chunk_${i}`);
-      if (chunk) rows = rows.concat(Object.values(chunk));
-    }
-    if (!rows.length) {
-      fbStatus('Dados locais','saved');
-      jPopulate(JOURNEY_RAW); jClear();
-      setTimeout(()=>fbStatus('Firebase'),3000);
-      return;
-    }
-    DSR_RAW = rows;
-    JOURNEY_RAW = recalcJourney(DSR_RAW);
-    
-    jPopulate(JOURNEY_RAW); jClear();
-    document.getElementById('uploadLabel').textContent = `${rows.length.toLocaleString('pt-BR')} registros do Firebase (${meta.updated ? meta.updated.slice(0,10) : ''})`;
-    fbStatus('☁ Dados carregados','saved');
-    setTimeout(()=>fbStatus('Firebase'),3000);
-  } catch(e) {
-    // CORS, timeout ou qualquer erro de rede → usa dados locais embutidos
-    console.warn('Firebase indisponível, usando dados locais:', e.message);
-    fbStatus('Dados locais','saved');
-    jPopulate(JOURNEY_RAW); jClear();
-    setTimeout(()=>fbStatus('Firebase'),3000);
-  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -507,6 +438,41 @@ function jRenderCharts(src) {
 }
 
 
+// ─── TOP OFENSORES POR INSUCESSOS (pré-calculado do XLS) ───
+const INSUC_OFFENDERS = [{driver:4582171,insucessos:145,rotas:10,mlp:"BRJ TRANSP."},
+{driver:4447002,insucessos:133,rotas:14,mlp:"RODACOOP"},
+{driver:4394659,insucessos:98,rotas:10,mlp:"RODACOOP"},
+{driver:4024686,insucessos:84,rotas:15,mlp:"RODACOOP"},
+{driver:3930556,insucessos:81,rotas:12,mlp:"RODACOOP"},
+{driver:3532611,insucessos:78,rotas:11,mlp:"RODACOOP"},
+{driver:4446974,insucessos:76,rotas:12,mlp:"WLS CARGO"},
+{driver:2260324,insucessos:75,rotas:13,mlp:"50 MAIS"},
+{driver:1443397,insucessos:72,rotas:10,mlp:"COOPMETRO"},
+{driver:4558994,insucessos:70,rotas:13,mlp:"BRJ TRANSP."},
+{driver:4365627,insucessos:66,rotas:14,mlp:"RODACOOP"},
+{driver:4324252,insucessos:65,rotas:8,mlp:"KANGU"},
+{driver:4467164,insucessos:64,rotas:10,mlp:"BRJ TRANSP."},
+{driver:3966228,insucessos:64,rotas:13,mlp:"RODACOOP"},
+{driver:4630886,insucessos:63,rotas:15,mlp:"BRJ TRANSP."}];
+
+function renderInsucessosOffenders() {
+  const el = document.getElementById('j-insucessos-offenders');
+  if (!INSUC_OFFENDERS.length) {
+    el.innerHTML = '<div class="offenders-empty">Nenhum driver com insucessos registrados.</div>';
+    return;
+  }
+  el.innerHTML = '<div class="insuc-list">' +
+    INSUC_OFFENDERS.map(r => `
+      <div class="insuc-pill" onclick="filterByDriver('${r.driver}')" title="Clique para filtrar: Driver ${r.driver} | ${r.mlp} | ${r.rotas} rotas">
+        <div>
+          <div class="ip-id">${r.driver}</div>
+          <div class="ip-mlp">${r.mlp}</div>
+        </div>
+        <span class="ip-badge">${r.insucessos} insuc.</span>
+      </div>`).join('') +
+  '</div>';
+}
+
 function renderOffenders(src) {
   const alertDrivers = src
     .filter(r => r.alerta)
@@ -558,6 +524,7 @@ function jRender() {
   document.getElementById('j-kMLPs').textContent=top?top[1]+' drivers em alerta':'';
   jRenderCharts(src);
   renderOffenders(src);
+  renderInsucessosOffenders();
 
   const tp=Math.max(1,Math.ceil(src.length/J_PS));
   if(jPage>tp) jPage=tp;
@@ -606,8 +573,8 @@ function pagHtml(page, tp, fn) {
 // ═══════════════════════════════════════════════════════════════
 
 jPopulate(JOURNEY_RAW); jClear();
-// Try loading from Firebase on startup
-loadFromFirebase();
+// Load local data on startup
+jPopulate(JOURNEY_RAW); jClear();
 </script>
 </body>
 </html>
