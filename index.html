@@ -386,15 +386,32 @@ function saveToFirebase() {
 
 async function loadFromFirebase() {
   fbStatus('Carregando…','saving');
+  
+  // Timeout para evitar travamento caso Firebase não responda (ex: CORS bloqueado)
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Timeout ao conectar ao Firebase')), 5000)
+  );
+  
   try {
-    const meta = await fbGet('data/meta');
-    if (!meta || !meta.chunks) { fbStatus('Sem dados salvos'); return; }
+    const meta = await Promise.race([fbGet('data/meta'), timeout]);
+    if (!meta || !meta.chunks) {
+      fbStatus('Dados locais','saved');
+      // Usa dados embutidos no HTML
+      jPopulate(JOURNEY_RAW); jClear();
+      setTimeout(()=>fbStatus('Firebase'),3000);
+      return;
+    }
     let rows = [];
     for (let i=0; i<meta.chunks; i++) {
       const chunk = await fbGet(`data/chunk_${i}`);
       if (chunk) rows = rows.concat(Object.values(chunk));
     }
-    if (!rows.length) { fbStatus('Sem dados'); return; }
+    if (!rows.length) {
+      fbStatus('Dados locais','saved');
+      jPopulate(JOURNEY_RAW); jClear();
+      setTimeout(()=>fbStatus('Firebase'),3000);
+      return;
+    }
     DSR_RAW = rows;
     JOURNEY_RAW = recalcJourney(DSR_RAW);
     
@@ -402,7 +419,13 @@ async function loadFromFirebase() {
     document.getElementById('uploadLabel').textContent = `${rows.length.toLocaleString('pt-BR')} registros do Firebase (${meta.updated ? meta.updated.slice(0,10) : ''})`;
     fbStatus('☁ Dados carregados','saved');
     setTimeout(()=>fbStatus('Firebase'),3000);
-  } catch(e) { fbStatus('Erro ao carregar','err'); console.error(e); }
+  } catch(e) {
+    // CORS, timeout ou qualquer erro de rede → usa dados locais embutidos
+    console.warn('Firebase indisponível, usando dados locais:', e.message);
+    fbStatus('Dados locais','saved');
+    jPopulate(JOURNEY_RAW); jClear();
+    setTimeout(()=>fbStatus('Firebase'),3000);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
