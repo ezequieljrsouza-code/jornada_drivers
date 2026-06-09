@@ -992,8 +992,9 @@ function pagHtml(page, tp, fn) {
 //  INIT
 // ═══════════════════════════════════════════════════════════════
 
-jPopulate(JOURNEY_RAW); jClear();
-// Load local data on startup
+// Recompute JOURNEY_RAW from DSR_RAW so rota_ids is always populated
+DSR_RAW.forEach(r => { if (!r._date_iso) r._date_iso = parseDateStr(String(r.Data||'')); });
+JOURNEY_RAW = recalcJourney(DSR_RAW);
 jPopulate(JOURNEY_RAW); jClear();
 </script>
 
