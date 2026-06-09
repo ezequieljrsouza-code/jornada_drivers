@@ -34,11 +34,7 @@ header{background:var(--dark);padding:0 28px;height:68px;display:grid;grid-templ
 .fb-status.err{color:var(--red)}
 
 /* ── TABS ── */
-.tab-bar{background:var(--dark);display:flex;padding:0 28px;gap:2px}
-.tab-btn{padding:11px 24px;font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);border:none;background:transparent;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s}
-.tab-btn:hover{color:#fff}
-.tab-btn.active{color:var(--yellow);border-bottom-color:var(--yellow)}
-.tab-panel{display:none}.tab-panel.active{display:block}
+
 
 /* ── FILTERS ── */
 .filters-bar{background:var(--yellow);padding:12px 28px;display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;border-bottom:2px solid var(--dark)}
@@ -123,7 +119,21 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
 .page-btn:hover,.page-btn.active{background:var(--dark);color:var(--yellow);border-color:var(--dark)}
 .page-btn:disabled{opacity:.4;cursor:not-allowed}
 
-@media(max-width:700px){.filters-bar,.main,.upload-bar{padding-left:14px;padding-right:14px}header{padding:0 14px}.header-title{font-size:.82rem}.tab-bar{padding:0 14px}}
+@media(max-width:700px){.filters-bar,.main,.upload-bar{padding-left:14px;padding-right:14px}header{padding:0 14px}.header-title{font-size:.82rem}}
+
+/* ── OFFENDERS CARD ── */
+.offenders-card{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:24px}
+.offenders-list{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px}
+.offender-pill{display:inline-flex;align-items:center;gap:7px;background:var(--red-bg);border:1.5px solid var(--red);border-radius:8px;padding:6px 12px;font-size:.78rem;cursor:pointer;transition:all .15s}
+.offender-pill:hover{background:var(--red);color:#fff}
+.offender-pill:hover .op-days{background:rgba(255,255,255,.25);color:#fff}
+.offender-pill:hover .op-mlp{color:#ffb3b0}
+.op-id{font-weight:800;color:var(--red);font-size:.82rem}
+.offender-pill:hover .op-id{color:#fff}
+.op-mlp{font-size:.68rem;color:#a00;font-weight:600}
+.op-days{background:var(--red);color:#fff;border-radius:5px;padding:1px 6px;font-size:.7rem;font-weight:800}
+.offenders-empty{padding:14px 18px;font-size:.82rem;color:var(--g400);font-style:italic}
+
 </style>
 </head>
 <body>
@@ -149,68 +159,11 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
   <div id="uploadStatus"></div>
 </div>
 
-<!-- TABS -->
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('dsr',this)">📦 Painel DSR</button>
-  <button class="tab-btn" onclick="switchTab('jornada',this)">🚚 Jornada Drivers</button>
-</div>
 
-<!-- ═══ TAB 1: DSR ═══ -->
-<div id="tab-dsr" class="tab-panel active">
-  <div class="filters-bar">
-    <div class="filter-group"><label>MLP</label><select id="d-fMLP"><option value="">Todos</option></select></div>
-    <div class="filter-group"><label>Placa</label><select id="d-fPlaca"><option value="">Todas</option></select></div>
-    <div class="filter-group"><label>Data Início</label><input type="date" id="d-fDi"></div>
-    <div class="filter-group"><label>Data Fim</label><input type="date" id="d-fDf"></div>
-    <button class="btn-filter" onclick="dsrApply()">Filtrar</button>
-    <button class="btn-clear" onclick="dsrClear()">Limpar</button>
-  </div>
-  <div class="main">
-    <div class="kpi-row">
-      <div class="kpi-card dark"><div class="kpi-label">Rotas</div><div class="kpi-value" id="d-kRotas">—</div><div class="kpi-sub">total filtrado</div></div>
-      <div class="kpi-card"><div class="kpi-label">Pacotes</div><div class="kpi-value" id="d-kPacotes">—</div><div class="kpi-sub">total</div></div>
-      <div class="kpi-card green"><div class="kpi-label">Entregue</div><div class="kpi-value" id="d-kEntregue">—</div><div class="kpi-sub">entregues</div></div>
-      <div class="kpi-card orange"><div class="kpi-label">DS Médio</div><div class="kpi-value" id="d-kDS">—</div><div class="kpi-sub">taxa de entrega</div></div>
-      <div class="kpi-card red"><div class="kpi-label">Insucessos</div><div class="kpi-value" id="d-kInsuc">—</div><div class="kpi-sub">total</div></div>
-      <div class="kpi-card"><div class="kpi-label">KM Real</div><div class="kpi-value" id="d-kKm">—</div><div class="kpi-sub">km percorridos</div></div>
-    </div>
-    <div class="section-title">Registros</div>
-    <div class="search-wrap" style="margin-bottom:12px">
-      <div class="search-input-wrap">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input class="srch" id="d-srch" placeholder="Pesquisar em todas as colunas…" oninput="dsrSearch(this.value)">
-      </div>
-    </div>
-    <div class="table-wrap">
-      <div class="table-header"><span class="table-info" id="d-info">—</span><span style="font-size:.72rem;color:var(--g600)">Clique no cabeçalho para ordenar</span></div>
-      <div class="table-scroll">
-        <table><thead><tr>
-          <th onclick="dsrSort('Data')">Data</th>
-          <th onclick="dsrSort('MLP')">MLP</th>
-          <th onclick="dsrSort('Placa')">Placa</th>
-          <th onclick="dsrSort('Driver')">Driver</th>
-          <th onclick="dsrSort('REGIONAL')">Regional</th>
-          <th onclick="dsrSort('SVC')">SVC</th>
-          <th onclick="dsrSort('CANAL')">Canal</th>
-          <th onclick="dsrSort('Ciclo')">Ciclo</th>
-          <th onclick="dsrSort('Pacotes')">Pacotes</th>
-          <th onclick="dsrSort('Entregue')">Entregue</th>
-          <th onclick="dsrSort('DS')">DS</th>
-          <th onclick="dsrSort('Total de Insucessos')">Insucessos</th>
-          <th onclick="dsrSort('KM_PLAN')">KM Plan</th>
-          <th onclick="dsrSort('KM_REAL')">KM Real</th>
-          <th onclick="dsrSort('ORH_PLAN')">ORH Plan</th>
-          <th onclick="dsrSort('ORH_HOURS')">ORH Real</th>
-          <th onclick="dsrSort('Veículo')">Veículo</th>
-        </tr></thead><tbody id="d-tbody"></tbody></table>
-      </div>
-      <div class="pagination" id="d-pag"></div>
-    </div>
-  </div>
-</div>
+
 
 <!-- ═══ TAB 2: JORNADA ═══ -->
-<div id="tab-jornada" class="tab-panel">
+<div id="tab-jornada">
   <div class="filters-bar">
     <div class="filter-group"><label>MLP</label><select id="j-fMLP"><option value="">Todos</option></select></div>
     <div class="filter-group"><label>Canal</label><select id="j-fCanal"><option value="">Todos</option></select></div>
@@ -226,6 +179,15 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
       <div class="kpi-card green"><div class="kpi-label">✓ Dentro do Limite</div><div class="kpi-value" id="j-kOK">—</div><div class="kpi-sub">≤7 dias consecutivos</div></div>
       <div class="kpi-card"><div class="kpi-label">Máx. Consecutivos</div><div class="kpi-value" id="j-kMax">—</div><div class="kpi-sub">dias registrados</div></div>
       <div class="kpi-card"><div class="kpi-label">MLP Mais Ofensora</div><div class="kpi-value" style="font-size:1rem" id="j-kMLP">—</div><div class="kpi-sub" id="j-kMLPs">—</div></div>
+    </div>
+    <div class="offenders-card">
+      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between">
+        <span class="card-title">🔴 Drivers Mais Ofensores — IDs com &gt;7 dias consecutivos</span>
+        <span style="font-size:.7rem;color:var(--g600);font-style:italic">Clique no ID para filtrar na tabela</span>
+      </div>
+      <div id="j-offenders">
+        <div class="offenders-empty">Carregando…</div>
+      </div>
     </div>
     <div class="two-col">
       <div class="chart-card"><div class="card-header"><span class="card-title">Transportadoras Mais Ofensoras</span></div><div class="chart-body" id="j-mlpChart"></div></div>
@@ -333,15 +295,7 @@ function maxStreakInfo(dates) {
   return [ms, bstart, bend];
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  TAB SWITCH
-// ═══════════════════════════════════════════════════════════════
-function switchTab(id, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
-}
+
 
 // ═══════════════════════════════════════════════════════════════
 //  UPLOAD + PARSE
@@ -379,7 +333,7 @@ function handleFile(file) {
       JOURNEY_RAW = recalcJourney(DSR_RAW);
       lbl.textContent = file.name;
       st.className='ok'; st.textContent = rows.length.toLocaleString('pt-BR')+' registros carregados ✓';
-      dsrPopulate(DSR_RAW); dsrClear();
+      
       jPopulate(JOURNEY_RAW); jClear();
       saveToFirebase();
     } catch(err) { st.className='err'; st.textContent='Erro: '+err.message; }
@@ -443,96 +397,12 @@ async function loadFromFirebase() {
     if (!rows.length) { fbStatus('Sem dados'); return; }
     DSR_RAW = rows;
     JOURNEY_RAW = recalcJourney(DSR_RAW);
-    dsrPopulate(DSR_RAW); dsrClear();
+    
     jPopulate(JOURNEY_RAW); jClear();
     document.getElementById('uploadLabel').textContent = `${rows.length.toLocaleString('pt-BR')} registros do Firebase (${meta.updated ? meta.updated.slice(0,10) : ''})`;
     fbStatus('☁ Dados carregados','saved');
     setTimeout(()=>fbStatus('Firebase'),3000);
   } catch(e) { fbStatus('Erro ao carregar','err'); console.error(e); }
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  DSR PANEL
-// ═══════════════════════════════════════════════════════════════
-let dFiltered = [...DSR_RAW], dSortCol = '_d', dSortDir = 1, dPage = 1, dSearch = '';
-const D_PS = 30;
-
-function dsrPopulate(src) {
-  const mlps = [...new Set(src.map(r=>r.MLP).filter(Boolean))].sort();
-  const placas = [...new Set(src.map(r=>r.Placa).filter(Boolean))].sort();
-  const sm = document.getElementById('d-fMLP'), sp = document.getElementById('d-fPlaca');
-  const cv = sm.value, cv2 = sp.value;
-  sm.innerHTML = '<option value="">Todos</option>' + mlps.map(v=>`<option>${v}</option>`).join('');
-  sp.innerHTML = '<option value="">Todas</option>' + placas.map(v=>`<option>${v}</option>`).join('');
-  if (cv) sm.value=cv; if (cv2) sp.value=cv2;
-  const allD = src.map(r=>r._d||'').filter(Boolean).sort();
-  if (allD.length) { document.getElementById('d-fDi').value=allD[0]; document.getElementById('d-fDf').value=allD[allD.length-1]; }
-}
-
-function dsrApply() {
-  const mlp=document.getElementById('d-fMLP').value, placa=document.getElementById('d-fPlaca').value;
-  const di=document.getElementById('d-fDi').value, df=document.getElementById('d-fDf').value;
-  dFiltered = DSR_RAW.filter(r=>{
-    if (mlp && r.MLP!==mlp) return false;
-    if (placa && r.Placa!==placa) return false;
-    if (di && (r._d||'') < di) return false;
-    if (df && (r._d||'') > df) return false;
-    return true;
-  });
-  dPage=1; dsrRender();
-}
-function dsrClear() {
-  document.getElementById('d-fMLP').value=''; document.getElementById('d-fPlaca').value='';
-  const allD = DSR_RAW.map(r=>r._d||'').filter(Boolean).sort();
-  if (allD.length) { document.getElementById('d-fDi').value=allD[0]; document.getElementById('d-fDf').value=allD[allD.length-1]; }
-  dFiltered=[...DSR_RAW]; dSearch=''; document.getElementById('d-srch').value=''; dPage=1; dsrRender();
-}
-function dsrSearch(v) { dSearch=v.trim().toLowerCase(); dPage=1; dsrRender(); }
-function dsrSort(col) { if(dSortCol===col) dSortDir*=-1; else {dSortCol=col;dSortDir=1;} dsrRender(); }
-
-function fmt(n) { if(n==null||n==='') return '—'; if(typeof n==='number') return n.toLocaleString('pt-BR'); return n; }
-
-function dsrRender() {
-  let src = [...dFiltered];
-  if (dSearch) src = src.filter(r=>Object.values(r).some(v=>String(v??'').toLowerCase().includes(dSearch)));
-  src.sort((a,b)=>{ let va=a[dSortCol]??'', vb=b[dSortCol]??''; if(typeof va==='number'&&typeof vb==='number') return(va-vb)*dSortDir; return String(va).localeCompare(String(vb),'pt-BR')*dSortDir; });
-
-  const tot=src.length, sumP=src.reduce((s,r)=>s+(r.Pacotes||0),0), sumE=src.reduce((s,r)=>s+(r.Entregue||0),0);
-  const sumI=src.reduce((s,r)=>s+(r['Total de Insucessos']||0),0), sumK=src.reduce((s,r)=>s+(r.KM_REAL||0),0);
-  const avgDS=tot?(src.reduce((s,r)=>s+(r.DS||0),0)/tot):0;
-  document.getElementById('d-kRotas').textContent=tot.toLocaleString('pt-BR');
-  document.getElementById('d-kPacotes').textContent=sumP.toLocaleString('pt-BR');
-  document.getElementById('d-kEntregue').textContent=sumE.toLocaleString('pt-BR');
-  document.getElementById('d-kDS').textContent=(avgDS*100).toFixed(1)+'%';
-  document.getElementById('d-kInsuc').textContent=sumI.toLocaleString('pt-BR');
-  document.getElementById('d-kKm').textContent=sumK.toLocaleString('pt-BR');
-
-  const tp=Math.max(1,Math.ceil(src.length/D_PS));
-  if(dPage>tp) dPage=tp;
-  const pg=src.slice((dPage-1)*D_PS, dPage*D_PS);
-  document.getElementById('d-info').textContent=src.length.toLocaleString('pt-BR')+' registros';
-  const tbody=document.getElementById('d-tbody');
-  if(!pg.length) { tbody.innerHTML=`<tr><td colspan="17" style="text-align:center;padding:40px;color:var(--g400)">Nenhum registro encontrado</td></tr>`; }
-  else tbody.innerHTML=pg.map(r=>{
-    const ds=(r.DS||0)*100, dsCls=ds>=95?'ds-ok':'ds-bad';
-    const cCls=r.CANAL==='Frota Fixa'?'badge-y':'badge-g';
-    return `<tr>
-      <td>${r.Data||''}</td><td><strong>${r.MLP||''}</strong></td>
-      <td><span class="badge badge-g">${r.Placa||''}</span></td>
-      <td>${r.Driver||''}</td><td>${r.REGIONAL||''}</td><td>${r.SVC||''}</td>
-      <td><span class="badge ${cCls}">${r.CANAL||''}</span></td><td>${r.Ciclo||''}</td>
-      <td>${fmt(r.Pacotes)}</td><td>${fmt(r.Entregue)}</td>
-      <td class="${dsCls}">${ds.toFixed(1)}%</td>
-      <td>${fmt(r['Total de Insucessos'])}</td>
-      <td>${fmt(r.KM_PLAN)}</td><td>${fmt(r.KM_REAL)}</td>
-      <td>${fmt(r.ORH_PLAN)}</td><td>${fmt(r.ORH_HOURS)}</td>
-      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis">${r['Ve\u00edculo']||''}</td>
-    </tr>`; }).join('');
-  dsrPag(tp, 'd-pag', p=>{dPage=p;dsrRender();});
-}
-function dsrPag(tp, id, fn) {
-  if(tp<=1){document.getElementById(id).innerHTML='';return;}
-  let h=pagHtml(dPage,tp,fn); document.getElementById(id).innerHTML=h;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -613,6 +483,41 @@ function jRenderCharts(src) {
   renderBar(mc,'j-mlpChart'); renderBar(cc,'j-canalChart');
 }
 
+
+function renderOffenders(src) {
+  const alertDrivers = src
+    .filter(r => r.alerta)
+    .sort((a,b) => b.max_consecutivos - a.max_consecutivos)
+    .slice(0, 30); // top 30
+
+  const el = document.getElementById('j-offenders');
+  if (!alertDrivers.length) {
+    el.innerHTML = '<div class="offenders-empty">Nenhum driver em alerta nos filtros atuais.</div>';
+    return;
+  }
+  el.innerHTML = '<div class="offenders-list">' +
+    alertDrivers.map(r => `
+      <div class="offender-pill" onclick="filterByDriver('${r.driver}')" title="Clique para filtrar: Driver ${r.driver} | ${r.mlp} | ${r.canal}">
+        <div>
+          <div class="op-id">${r.driver}</div>
+          <div class="op-mlp">${r.mlp}</div>
+        </div>
+        <span class="op-days">${r.max_consecutivos}d</span>
+      </div>`).join('') +
+  '</div>';
+}
+
+function filterByDriver(driverId) {
+  // Set search field to driver ID and trigger search
+  const srch = document.getElementById('j-srch');
+  srch.value = driverId;
+  jSearch = driverId.toLowerCase();
+  jPage = 1;
+  jRender();
+  // Scroll to table
+  document.getElementById('j-tbody').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 function jRender() {
   let src=[...jFiltered];
   if(jSearch) src=src.filter(r=>Object.values(r).some(v=>String(v??'').toLowerCase().includes(jSearch)));
@@ -629,6 +534,7 @@ function jRender() {
   document.getElementById('j-kMLP').textContent=top?top[0]:'—';
   document.getElementById('j-kMLPs').textContent=top?top[1]+' drivers em alerta':'';
   jRenderCharts(src);
+  renderOffenders(src);
 
   const tp=Math.max(1,Math.ceil(src.length/J_PS));
   if(jPage>tp) jPage=tp;
@@ -675,7 +581,7 @@ function pagHtml(page, tp, fn) {
 // ═══════════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════════
-dsrPopulate(DSR_RAW); dsrClear();
+
 jPopulate(JOURNEY_RAW); jClear();
 // Try loading from Firebase on startup
 loadFromFirebase();
