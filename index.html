@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel SPA1 — Mercado Livre</title>
+<title>Controle Jornada</title>
+<link rel="icon" type="image/x-icon" href="mercado-libre.ico">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -15,58 +16,20 @@
 body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:var(--g100);color:#222;min-height:100vh}
 
 /* ── HEADER ── */
-header{background:var(--dark);padding:0 28px;height:68px;display:grid;grid-template-columns:200px 1fr 200px;align-items:center;box-shadow:0 2px 12px rgba(0,0,0,.2);position:sticky;top:0;z-index:200}
-.logo-wrap img{height:34px;filter:brightness(0) invert(1)}
-.header-title{color:var(--yellow);font-size:1.05rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;text-align:center}
+header{background:var(--yellow);padding:0 28px;height:64px;display:grid;grid-template-columns:200px 1fr 200px;align-items:center;box-shadow:0 1px 0 rgba(0,0,0,.1);position:sticky;top:0;z-index:200}
+.logo-wrap{display:flex;align-items:center;gap:12px}
+.header-menu-btn{background:none;border:none;cursor:pointer;color:var(--dark);display:flex;align-items:center;padding:4px;border-radius:6px;transition:background .15s}
+.header-menu-btn:hover{background:rgba(0,0,0,.08)}
+.logo-wrap img{height:30px}
+.logo-divider{width:1px;height:26px;background:rgba(0,0,0,.25)}
+.logo-app-name{font-size:.95rem;font-weight:900;color:var(--dark);letter-spacing:.01em}
+.header-title{color:var(--dark);font-size:1.05rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;text-align:center}
 .header-right{display:flex;justify-content:flex-end;align-items:center;gap:10px}
 
 /* ── HEADER UPLOAD BTN ── */
-.header-upload-btn{display:flex;align-items:center;gap:7px;background:var(--yellow);border:none;border-radius:7px;padding:7px 14px;cursor:pointer;font-size:.75rem;font-weight:800;color:var(--dark);white-space:nowrap;transition:all .15s;max-width:200px;overflow:hidden}
-.header-upload-btn:hover{background:#ffd000;box-shadow:0 0 0 2px rgba(255,255,255,.4)}
+.header-upload-btn{display:flex;align-items:center;gap:7px;background:var(--dark);border:none;border-radius:7px;padding:8px 14px;cursor:pointer;font-size:.75rem;font-weight:800;color:var(--yellow);white-space:nowrap;transition:all .15s;max-width:200px;overflow:hidden}
+.header-upload-btn:hover{background:var(--dark2);box-shadow:0 0 0 2px rgba(0,0,0,.15)}
 .header-upload-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* ── PERIOD OFFENDER CARD ── */
-.period-offender-card{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:24px;border-left:5px solid var(--red)}
-.period-offender-filters{display:flex;align-items:flex-end;gap:14px;padding:12px 18px;background:var(--red-bg);flex-wrap:wrap;border-bottom:1px solid #fcc}
-.period-offender-filters .filter-group label{color:#a00}
-.period-offender-filters .filter-group select,.period-offender-filters .filter-group input{border-color:#f99;min-width:130px}
-.period-offender-filters .btn-filter{background:var(--red);color:#fff}
-.period-offender-filters .btn-filter:hover{background:#c62828}
-.period-offender-body{padding:16px 18px}
-.top-offender-banner{display:flex;align-items:center;gap:18px;background:var(--red-bg);border:2px solid var(--red);border-radius:10px;padding:14px 20px;margin-bottom:14px}
-.top-offender-badge{background:var(--red);color:#fff;border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;flex-shrink:0}
-.top-offender-info{flex:1}
-.top-offender-id{font-size:1.3rem;font-weight:900;color:var(--red)}
-.top-offender-mlp{font-size:.8rem;font-weight:700;color:#a00;margin-top:2px}
-.top-offender-stats{display:flex;gap:18px;margin-top:6px;flex-wrap:wrap}
-.top-offender-stat{text-align:center}
-.top-offender-stat-val{font-size:1.1rem;font-weight:900;color:var(--dark)}
-.top-offender-stat-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g600)}
-.period-offender-list{display:flex;flex-wrap:wrap;gap:8px}
-.period-offender-pill{display:inline-flex;align-items:center;gap:7px;background:var(--red-bg);border:1.5px solid var(--red);border-radius:8px;padding:6px 12px;font-size:.78rem;cursor:pointer;transition:all .15s}
-.period-offender-pill:hover{background:var(--red);color:#fff}
-.period-offender-pill:hover .pop-days{background:rgba(255,255,255,.25);color:#fff}
-.period-offender-pill:hover .pop-mlp{color:#ffb3b0}
-.period-offender-pill:hover .pop-id{color:#fff}
-.pop-id{font-weight:800;color:var(--red);font-size:.82rem}
-.pop-mlp{font-size:.68rem;color:#a00;font-weight:600}
-.pop-days{background:var(--red);color:#fff;border-radius:5px;padding:1px 6px;font-size:.7rem;font-weight:800}
-
-/* ── DRIVER SEARCH CARD ── */
-.driver-search-card{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:24px}
-.driver-search-body{padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.driver-id-input-wrap{position:relative;flex:1;max-width:320px}
-.driver-id-input-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--g400)}
-.driver-id-input{width:100%;padding:9px 12px 9px 34px;border:2px solid var(--dark);border-radius:7px;font-size:.9rem;font-weight:700;color:var(--dark);outline:none;background:#fff}
-.driver-id-input:focus{box-shadow:0 0 0 3px rgba(0,0,0,.12)}
-.driver-profile{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:10px;padding:12px 16px;background:var(--g100);border-radius:8px;border:1.5px solid var(--g200)}
-.driver-profile-id{font-size:1.5rem;font-weight:900;color:var(--dark)}
-.driver-profile-stats{display:flex;gap:16px;flex-wrap:wrap}
-.dp-stat{background:#fff;border-radius:7px;padding:8px 14px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.dp-stat-val{font-size:1.1rem;font-weight:900;color:var(--dark)}
-.dp-stat-lbl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--g600)}
-.dp-stat.alert .dp-stat-val{color:var(--red)}
-.dp-stat.ok .dp-stat-val{color:var(--green)}
 
 
 /* ── UPLOAD BAR ── */
@@ -88,9 +51,9 @@ header{background:var(--dark);padding:0 28px;height:68px;display:grid;grid-templ
 .filter-group label{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--dark)}
 .filter-group select,.filter-group input{border:2px solid var(--dark);border-radius:6px;padding:6px 10px;font-size:.82rem;font-weight:600;color:var(--dark);background:#fff;min-width:150px;outline:none}
 .filter-group select:focus,.filter-group input:focus{box-shadow:0 0 0 3px rgba(0,0,0,.15)}
-.btn-filter{background:var(--dark);color:var(--yellow);border:none;border-radius:6px;padding:7px 20px;font-size:.8rem;font-weight:800;text-transform:uppercase;cursor:pointer;align-self:flex-end}
+.btn-filter{background:var(--dark);color:var(--yellow);border:2px solid var(--dark);border-radius:6px;padding:7px 20px;font-size:.8rem;font-weight:800;text-transform:uppercase;cursor:pointer;align-self:flex-end;min-width:110px}
 .btn-filter:hover{background:var(--dark2)}
-.btn-clear{background:transparent;color:var(--dark);border:2px solid var(--dark);border-radius:6px;padding:5px 14px;font-size:.78rem;font-weight:700;cursor:pointer;align-self:flex-end}
+.btn-clear{background:transparent;color:var(--dark);border:2px solid var(--dark);border-radius:6px;padding:7px 20px;font-size:.8rem;font-weight:800;text-transform:uppercase;cursor:pointer;align-self:flex-end;min-width:110px}
 .btn-clear:hover{background:var(--dark);color:var(--yellow)}
 
 /* ── MAIN ── */
@@ -98,7 +61,7 @@ header{background:var(--dark);padding:0 28px;height:68px;display:grid;grid-templ
 
 /* ── KPIs ── */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px;margin-bottom:24px}
-.kpi-card{background:#fff;border-radius:10px;padding:16px 18px 12px;box-shadow:0 1px 6px rgba(0,0,0,.07);border-top:4px solid var(--yellow)}
+.kpi-card{background:#fff;border-radius:8px;padding:14px 18px 12px;border:1px solid var(--g200);border-top:3px solid var(--yellow);text-align:center}
 .kpi-card.red{border-top-color:var(--red)}
 .kpi-card.green{border-top-color:var(--green)}
 .kpi-card.dark{border-top-color:var(--dark)}
@@ -112,7 +75,7 @@ header{background:var(--dark);padding:0 28px;height:68px;display:grid;grid-templ
 @media(max-width:900px){.two-col{grid-template-columns:1fr}}
 
 /* ── CHART CARD ── */
-.chart-card{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden}
+.chart-card{background:#fff;border-radius:10px;border:1px solid var(--g200);box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
 .card-header{padding:13px 18px;border-bottom:2px solid var(--g200)}
 .card-title{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--dark);border-left:4px solid var(--yellow);padding-left:8px}
 .chart-body{padding:14px 18px 10px}
@@ -134,7 +97,7 @@ header{background:var(--dark);padding:0 28px;height:68px;display:grid;grid-templ
 .srch:focus{border-color:var(--dark)}
 
 /* ── TABLE ── */
-.table-wrap{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden}
+.table-wrap{background:#fff;border-radius:10px;border:1px solid var(--g200);box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
 .table-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:2px solid var(--g200);gap:10px;flex-wrap:wrap}
 .table-info{font-size:.78rem;color:var(--g600);font-weight:600}
 
@@ -162,9 +125,9 @@ header{background:var(--dark);padding:0 28px;height:68px;display:grid;grid-templ
 
 .table-scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:.79rem}
-thead tr{background:var(--dark);color:#fff}
-thead th{padding:10px 11px;text-align:left;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;cursor:pointer;user-select:none}
-thead th:hover{background:var(--dark2)}
+thead tr{background:var(--yellow);color:var(--dark)}
+thead th{padding:10px 11px;text-align:left;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;cursor:pointer;user-select:none}
+thead th:hover{background:#ffd000}
 thead th.sort-asc::after{content:' ▲';font-size:.58rem}
 thead th.sort-desc::after{content:' ▼';font-size:.58rem}
 tbody tr{border-bottom:1px solid var(--g200);transition:background .1s}
@@ -191,29 +154,18 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
 @media(max-width:700px){.filters-bar,.main,.upload-bar{padding-left:14px;padding-right:14px}header{padding:0 14px}.header-title{font-size:.82rem}}
 
 /* ── OFFENDERS CARD ── */
-.offenders-card{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:24px}
-.offenders-list{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px}
-.offender-pill{display:inline-flex;align-items:center;gap:7px;background:var(--red-bg);border:1.5px solid var(--red);border-radius:8px;padding:6px 12px;font-size:.78rem;cursor:pointer;transition:all .15s}
+.offenders-card{background:#fff;border-radius:10px;border:1px solid var(--g200);box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden;margin-bottom:24px}
+.offenders-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;padding:14px 18px}
+.offender-pill{display:flex;align-items:center;justify-content:space-between;gap:7px;background:var(--red-bg);border:1.5px solid var(--red);border-radius:8px;padding:6px 12px;font-size:.78rem;cursor:pointer;transition:all .15s}
 .offender-pill:hover{background:var(--red);color:#fff}
 .offender-pill:hover .op-days{background:rgba(255,255,255,.25);color:#fff}
 .offender-pill:hover .op-mlp{color:#ffb3b0}
-.op-id{font-weight:800;color:var(--red);font-size:.82rem}
+.offender-pill>div{min-width:0;overflow:hidden}
+.op-id{font-weight:800;color:var(--red);font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .offender-pill:hover .op-id{color:#fff}
-.op-mlp{font-size:.68rem;color:#a00;font-weight:600}
-.op-days{background:var(--red);color:#fff;border-radius:5px;padding:1px 6px;font-size:.7rem;font-weight:800}
+.op-mlp{font-size:.68rem;color:#a00;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.op-days{background:var(--red);color:#fff;border-radius:5px;padding:1px 6px;font-size:.7rem;font-weight:800;flex-shrink:0}
 .offenders-empty{padding:14px 18px;font-size:.82rem;color:var(--g400);font-style:italic}
-
-/* ── INSUCESSOS OFFENDERS ── */
-.insuc-card{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden;margin-bottom:24px}
-.insuc-list{display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px}
-.insuc-pill{display:inline-flex;align-items:center;gap:8px;background:#fff3e0;border:1.5px solid var(--orange);border-radius:8px;padding:7px 13px;font-size:.78rem;cursor:pointer;transition:all .15s}
-.insuc-pill:hover{background:var(--orange);color:#fff}
-.insuc-pill:hover .ip-mlp{color:#ffe0b2}
-.insuc-pill:hover .ip-id{color:#fff}
-.insuc-pill:hover .ip-badge{background:rgba(255,255,255,.25);color:#fff}
-.ip-id{font-weight:800;color:var(--orange);font-size:.83rem}
-.ip-mlp{font-size:.67rem;color:#bf360c;font-weight:600}
-.ip-badge{background:var(--orange);color:#fff;border-radius:5px;padding:1px 7px;font-size:.7rem;font-weight:800;white-space:nowrap}
 
 /* ── ROUTE ID CHIPS IN TABLE ── */
 .rota-ids-cell{display:flex;flex-wrap:wrap;gap:3px;align-items:center;max-width:200px}
@@ -238,7 +190,12 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
 <!-- HEADER -->
 <header>
   <div class="logo-wrap">
-    <img src="mercado-livre-logo-8.png" alt="Mercado Livre" onerror="this.style.display='none'">
+    <button class="header-menu-btn" title="Menu" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <img src="mercado-libre.svg" alt="Mercado Livre" onerror="this.style.display='none'">
+    <div class="logo-divider"></div>
+    <div class="logo-app-name">SPA1</div>
   </div>
   <div class="header-title">Controle de Jornada Drivers SPA1</div>
   <div class="header-right">
@@ -260,10 +217,10 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
 <!-- ═══ TAB 2: JORNADA ═══ -->
 <div id="tab-jornada">
   <div class="filters-bar">
-    <div class="filter-group"><label>MLP</label><select id="j-fMLP"><option value="">Todos</option></select></div>
-    <div class="filter-group"><label>Canal</label><select id="j-fCanal"><option value="">Todos</option></select></div>
-    <div class="filter-group"><label>Status</label><select id="j-fStatus"><option value="">Todos</option><option value="alerta">⚠ Alerta (&gt;7 dias)</option><option value="ok">✓ OK (≤7 dias)</option></select></div>
-    <div class="filter-group"><label>Mín. dias consec.</label><input type="number" id="j-fMin" min="1" max="30" placeholder="Ex: 5" style="min-width:110px"></div>
+    <div class="filter-group"><label>MLP</label><select id="j-fMLP" onchange="jApply()"><option value="">Todos</option></select></div>
+    <div class="filter-group"><label>Perfil</label><select id="j-fCanal" onchange="jApply()"><option value="">Todos</option></select></div>
+    <div class="filter-group"><label>Status</label><select id="j-fStatus" onchange="jApply()"><option value="">Todos</option><option value="alerta">⚠ Alerta (&gt;7 dias)</option><option value="ok">✓ OK (≤7 dias)</option></select></div>
+    <div class="filter-group"><label>Mín. dias consec.</label><input type="number" id="j-fMin" min="1" max="30" placeholder="Ex: 5" style="min-width:110px" oninput="jApply()"></div>
     <button class="btn-filter" onclick="jApply()">Filtrar</button>
     <button class="btn-clear" onclick="jClear()">Limpar</button>
   </div>
@@ -275,43 +232,6 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
       <div class="kpi-card"><div class="kpi-label">Máx. Consecutivos</div><div class="kpi-value" id="j-kMax">—</div><div class="kpi-sub">dias registrados</div></div>
       <div class="kpi-card"><div class="kpi-label">MLP Mais Ofensora</div><div class="kpi-value" style="font-size:1rem" id="j-kMLP">—</div><div class="kpi-sub" id="j-kMLPs">—</div></div>
     </div>
-    <!-- ── DRIVER MAIS OFENSOR POR PERÍODO ── -->
-    <div class="period-offender-card">
-      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;background:var(--red-bg);">
-        <span class="card-title" style="border-left-color:var(--red)">🔴 Driver Mais Ofensor por Período — acima de 7 dias trabalhados</span>
-        <span style="font-size:.7rem;color:#a00;font-style:italic">Filtre por período para identificar o principal infrator</span>
-      </div>
-      <div class="period-offender-filters">
-        <div class="filter-group"><label>Data Início</label><input type="date" id="po-dtStart" style="min-width:140px"></div>
-        <div class="filter-group"><label>Data Fim</label><input type="date" id="po-dtEnd" style="min-width:140px"></div>
-        <div class="filter-group"><label>MLP</label><select id="po-fMLP" style="min-width:140px"><option value="">Todas</option></select></div>
-        <div class="filter-group"><label>Mín. dias consec.</label><input type="number" id="po-fMin" min="1" max="30" value="7" style="min-width:100px"></div>
-        <button class="btn-filter" onclick="renderPeriodOffender()">Analisar</button>
-        <button class="btn-clear" onclick="clearPeriodOffender()" style="border-color:#f99;color:#a00">Limpar</button>
-      </div>
-      <div class="period-offender-body" id="po-body">
-        <div style="color:var(--g400);font-style:italic;font-size:.82rem">Selecione um período e clique em Analisar para ver o driver mais ofensor.</div>
-      </div>
-    </div>
-
-    <!-- ── PESQUISA INDIVIDUAL DE DRIVER ── -->
-    <div class="driver-search-card">
-      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between">
-        <span class="card-title">🔍 Pesquisa Individual de Driver</span>
-        <span style="font-size:.7rem;color:var(--g600);font-style:italic">Digite o ID ou parte do nome/placa para ver o perfil completo</span>
-      </div>
-      <div style="padding:14px 18px">
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-          <div class="driver-id-input-wrap">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input class="driver-id-input" id="driverSearchInput" placeholder="ID do driver, placa, MLP…" oninput="renderDriverProfile(this.value)">
-          </div>
-          <button class="btn-clear" onclick="document.getElementById('driverSearchInput').value='';renderDriverProfile('')">Limpar</button>
-        </div>
-        <div id="driver-profile-area" style="margin-top:12px"></div>
-      </div>
-    </div>
-
     <div class="offenders-card">
       <div class="card-header" style="display:flex;align-items:center;justify-content:space-between">
         <span class="card-title">🔴 Drivers Mais Ofensores — IDs com &gt;7 dias consecutivos</span>
@@ -321,19 +241,9 @@ tbody td{padding:8px 11px;white-space:nowrap;color:#333}
         <div class="offenders-empty">Carregando…</div>
       </div>
     </div>
-    <!-- ── DRIVERS MAIS OFENSORES POR INSUCESSOS ── -->
-    <div class="insuc-card">
-      <div class="card-header" style="display:flex;align-items:center;justify-content:space-between">
-        <span class="card-title">🟠 Drivers Mais Ofensores — IDs por Total de Insucessos</span>
-        <span style="font-size:.7rem;color:var(--g600);font-style:italic">Clique no ID para filtrar na tabela</span>
-      </div>
-      <div id="j-insucessos-offenders">
-        <div class="offenders-empty">Carregando…</div>
-      </div>
-    </div>
     <div class="two-col">
       <div class="chart-card"><div class="card-header"><span class="card-title">Transportadoras Mais Ofensoras</span></div><div class="chart-body" id="j-mlpChart"></div></div>
-      <div class="chart-card"><div class="card-header"><span class="card-title">Distribuição por Canal</span></div><div class="chart-body" id="j-canalChart"></div></div>
+      <div class="chart-card"><div class="card-header"><span class="card-title">Distribuição perfil</span></div><div class="chart-body" id="j-canalChart"></div></div>
     </div>
     <div class="section-title">Controle de Jornada por Driver</div>
     <div class="search-wrap" style="margin-bottom:12px">
@@ -518,19 +428,6 @@ function jPopulate(src) {
   sm.innerHTML='<option value="">Todos</option>'+mlps.map(v=>`<option>${v}</option>`).join('');
   sc.innerHTML='<option value="">Todos</option>'+canais.map(v=>`<option>${v}</option>`).join('');
   if(cv)sm.value=cv; if(cv2)sc.value=cv2;
-  // Also populate period offender MLP filter
-  const poMLP = document.getElementById('po-fMLP');
-  const poCV = poMLP.value;
-  poMLP.innerHTML='<option value="">Todas</option>'+mlps.map(v=>`<option>${v}</option>`).join('');
-  if(poCV) poMLP.value=poCV;
-  // Set default date range for period offender from data
-  const dates = DSR_RAW.map(r=>r._date_iso).filter(Boolean).sort();
-  if (dates.length) {
-    const poStart = document.getElementById('po-dtStart');
-    const poEnd   = document.getElementById('po-dtEnd');
-    if (!poStart.value) poStart.value = dates[0];
-    if (!poEnd.value)   poEnd.value   = dates[dates.length-1];
-  }
 }
 
 function jApply() {
@@ -684,50 +581,16 @@ function jRenderCharts(src) {
     const mx=Math.max(...sorted.map(([,v])=>v.a+v.o),1);
     document.getElementById(elId).innerHTML=sorted.map(([n,v])=>{
       const tot=v.a+v.o, pa=(v.a/mx*100).toFixed(1), po=(v.o/mx*100).toFixed(1);
+      const alertaSeg = v.a ? `<div style="width:${pa}%;background:var(--red);height:100%;display:flex;align-items:center;padding:0 5px;font-size:.67rem;font-weight:700;color:#fff;border-radius:${v.o?'4px 0 0 4px':'4px'}">${v.a}</div>` : '';
+      const okSeg = v.o ? `<div style="width:${po}%;background:var(--green);height:100%;display:flex;align-items:center;padding:0 5px;font-size:.67rem;font-weight:700;color:#fff;border-radius:${v.a?'0 4px 4px 0':'4px'}">${v.o}</div>` : '';
       return `<div class="bar-row"><div class="bar-label">${n}</div><div class="bar-track"><div class="bar-stack">
-        <div style="width:${pa}%;background:var(--red);height:100%;display:flex;align-items:center;padding:0 5px;font-size:.67rem;font-weight:700;color:#fff;border-radius:4px 0 0 4px">${v.a||''}</div>
-        <div style="width:${po}%;background:var(--green);height:100%;display:flex;align-items:center;padding:0 5px;font-size:.67rem;font-weight:700;color:#fff;border-radius:0 4px 4px 0">${v.o||''}</div>
+        ${alertaSeg}${okSeg}
       </div></div><span style="font-size:.72rem;font-weight:700;color:#333;min-width:22px">${tot}</span></div>`;
     }).join('')+'<div class="legend"><span><span class="leg-dot" style="background:var(--red)"></span>Alerta</span><span><span class="leg-dot" style="background:var(--green)"></span>OK</span></div>';
   }
   renderBar(mc,'j-mlpChart'); renderBar(cc,'j-canalChart');
 }
 
-
-// ─── TOP OFENSORES POR INSUCESSOS (pré-calculado do XLS) ───
-const INSUC_OFFENDERS = [{driver:4582171,insucessos:145,rotas:10,mlp:"BRJ TRANSP."},
-{driver:4447002,insucessos:133,rotas:14,mlp:"RODACOOP"},
-{driver:4394659,insucessos:98,rotas:10,mlp:"RODACOOP"},
-{driver:4024686,insucessos:84,rotas:15,mlp:"RODACOOP"},
-{driver:3930556,insucessos:81,rotas:12,mlp:"RODACOOP"},
-{driver:3532611,insucessos:78,rotas:11,mlp:"RODACOOP"},
-{driver:4446974,insucessos:76,rotas:12,mlp:"WLS CARGO"},
-{driver:2260324,insucessos:75,rotas:13,mlp:"50 MAIS"},
-{driver:1443397,insucessos:72,rotas:10,mlp:"COOPMETRO"},
-{driver:4558994,insucessos:70,rotas:13,mlp:"BRJ TRANSP."},
-{driver:4365627,insucessos:66,rotas:14,mlp:"RODACOOP"},
-{driver:4324252,insucessos:65,rotas:8,mlp:"KANGU"},
-{driver:4467164,insucessos:64,rotas:10,mlp:"BRJ TRANSP."},
-{driver:3966228,insucessos:64,rotas:13,mlp:"RODACOOP"},
-{driver:4630886,insucessos:63,rotas:15,mlp:"BRJ TRANSP."}];
-
-function renderInsucessosOffenders() {
-  const el = document.getElementById('j-insucessos-offenders');
-  if (!INSUC_OFFENDERS.length) {
-    el.innerHTML = '<div class="offenders-empty">Nenhum driver com insucessos registrados.</div>';
-    return;
-  }
-  el.innerHTML = '<div class="insuc-list">' +
-    INSUC_OFFENDERS.map(r => `
-      <div class="insuc-pill" onclick="filterByDriver('${r.driver}')" title="Clique para filtrar: Driver ${r.driver} | ${r.mlp} | ${r.rotas} rotas">
-        <div>
-          <div class="ip-id">${r.driver}</div>
-          <div class="ip-mlp">${r.mlp}</div>
-        </div>
-        <span class="ip-badge">${r.insucessos} insuc.</span>
-      </div>`).join('') +
-  '</div>';
-}
 
 function renderOffenders(src) {
   const alertDrivers = src
@@ -763,165 +626,6 @@ function filterByDriver(driverId) {
   document.getElementById('j-tbody').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  PERIOD OFFENDER — Driver Mais Ofensor por Período
-// ═══════════════════════════════════════════════════════════════
-function renderPeriodOffender() {
-  const dtStart = document.getElementById('po-dtStart').value;
-  const dtEnd   = document.getElementById('po-dtEnd').value;
-  const mlp     = document.getElementById('po-fMLP').value;
-  const minDays = parseInt(document.getElementById('po-fMin').value) || 7;
-  const body    = document.getElementById('po-body');
-
-  // Filter raw data by period + MLP
-  let rows = DSR_RAW.filter(r => {
-    const d = r._date_iso || '';
-    if (dtStart && d < dtStart) return false;
-    if (dtEnd   && d > dtEnd)   return false;
-    if (mlp     && r.MLP !== mlp) return false;
-    return true;
-  });
-
-  if (!rows.length) {
-    body.innerHTML = '<div style="color:var(--g400);font-style:italic;font-size:.82rem">Nenhum dado encontrado para o período/filtros selecionados.</div>';
-    return;
-  }
-
-  // Recalculate journey for filtered set
-  const journey = recalcJourney(rows);
-  const alertDrivers = journey.filter(r => r.max_consecutivos > minDays)
-                               .sort((a,b) => b.max_consecutivos - a.max_consecutivos);
-
-  if (!alertDrivers.length) {
-    body.innerHTML = `<div style="color:var(--green);font-weight:700;font-size:.85rem">✓ Nenhum driver com mais de ${minDays} dias consecutivos no período selecionado.</div>`;
-    return;
-  }
-
-  const top = alertDrivers[0];
-  const periodLabel = dtStart || dtEnd
-    ? `${dtStart ? fmtDate(dtStart) : '…'} → ${dtEnd ? fmtDate(dtEnd) : '…'}`
-    : 'Todo o período';
-
-  let html = `
-    <div class="top-offender-banner">
-      <div class="top-offender-badge">🏆</div>
-      <div class="top-offender-info">
-        <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#a00;margin-bottom:2px">Driver Mais Ofensor no Período: ${periodLabel}</div>
-        <div class="top-offender-id">Driver ${top.driver}</div>
-        <div class="top-offender-mlp">${top.mlp} · ${top.canal}</div>
-        <div class="top-offender-stats">
-          <div class="top-offender-stat"><div class="top-offender-stat-val" style="color:var(--red)">${top.max_consecutivos}</div><div class="top-offender-stat-lbl">Dias Consecutivos</div></div>
-          <div class="top-offender-stat"><div class="top-offender-stat-val">${top.total_dias}</div><div class="top-offender-stat-lbl">Total de Dias</div></div>
-          <div class="top-offender-stat"><div class="top-offender-stat-val">${top.total_rotas}</div><div class="top-offender-stat-lbl">Total de Rotas</div></div>
-          <div class="top-offender-stat"><div class="top-offender-stat-val" style="font-size:.85rem">${top.streak_inicio ? fmtDate(top.streak_inicio)+' → '+fmtDate(top.streak_fim) : '—'}</div><div class="top-offender-stat-lbl">Maior Sequência</div></div>
-        </div>
-      </div>
-      <button class="btn-filter" style="align-self:flex-start;white-space:nowrap" onclick="filterByDriver('${top.driver}')">Ver na tabela →</button>
-    </div>`;
-
-  if (alertDrivers.length > 1) {
-    html += `<div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--g600);margin-bottom:8px">Outros ${alertDrivers.length-1} driver(s) acima de ${minDays} dias:</div>`;
-    html += '<div class="period-offender-list">' +
-      alertDrivers.slice(1, 20).map(r => `
-        <div class="period-offender-pill" onclick="filterByDriver('${r.driver}')" title="${r.mlp} | ${r.canal}">
-          <div>
-            <div class="pop-id">${r.driver}</div>
-            <div class="pop-mlp">${r.mlp}</div>
-          </div>
-          <span class="pop-days">${r.max_consecutivos}d</span>
-        </div>`).join('') +
-      '</div>';
-  }
-
-  body.innerHTML = html;
-}
-
-function clearPeriodOffender() {
-  document.getElementById('po-dtStart').value = '';
-  document.getElementById('po-dtEnd').value = '';
-  document.getElementById('po-fMLP').value = '';
-  document.getElementById('po-fMin').value = '7';
-  document.getElementById('po-body').innerHTML = '<div style="color:var(--g400);font-style:italic;font-size:.82rem">Selecione um período e clique em Analisar para ver o driver mais ofensor.</div>';
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  DRIVER PROFILE SEARCH — Pesquisa Individual de Driver
-// ═══════════════════════════════════════════════════════════════
-function renderDriverProfile(query) {
-  const area = document.getElementById('driver-profile-area');
-  const q = (query||'').trim().toLowerCase();
-
-  if (!q || q.length < 2) {
-    area.innerHTML = '';
-    return;
-  }
-
-  // Search in JOURNEY_RAW
-  const matches = JOURNEY_RAW.filter(r =>
-    String(r.driver).toLowerCase().includes(q) ||
-    String(r.mlp).toLowerCase().includes(q) ||
-    String(r.placas).toLowerCase().includes(q) ||
-    String(r.canal).toLowerCase().includes(q)
-  ).slice(0, 10);
-
-  if (!matches.length) {
-    area.innerHTML = '<div style="color:var(--g400);font-style:italic;font-size:.82rem;padding:8px 0">Nenhum driver encontrado para "'+query+'"</div>';
-    return;
-  }
-
-  let html = '<div style="display:flex;flex-direction:column;gap:10px">';
-  for (const r of matches) {
-    const alertClass = r.alerta ? 'alert' : 'ok';
-    const alertLabel = r.alerta ? '⚠ ALERTA' : '✓ OK';
-    const alertColor = r.alerta ? 'var(--red)' : 'var(--green)';
-    // Get all routes for this driver
-    const driverRoutes = DSR_RAW.filter(row => String(row.Driver) === String(r.driver));
-    const totalInsuc = driverRoutes.reduce((s, row) => s + (parseInt(row['Total de Insucessos'])||0), 0);
-    const totalPkg   = driverRoutes.reduce((s, row) => s + (parseInt(row['Pacotes'])||0), 0);
-    const avgDS      = driverRoutes.length ? (driverRoutes.reduce((s, row) => s + (parseFloat(row.DS)||0), 0) / driverRoutes.length * 100).toFixed(1) : '—';
-
-    html += `
-      <div class="driver-profile" style="border-color:${alertColor};border-left:4px solid ${alertColor}">
-        <div>
-          <div class="driver-profile-id">Driver ${r.driver}</div>
-          <div style="font-size:.75rem;font-weight:700;color:#555;margin-top:2px">${r.mlp} · ${r.canal}</div>
-          <div style="font-size:.68rem;color:var(--g600);margin-top:2px">Placa(s): ${r.placas||'—'}</div>
-        </div>
-        <div class="driver-profile-stats">
-          <div class="dp-stat ${alertClass}">
-            <div class="dp-stat-val">${r.max_consecutivos}</div>
-            <div class="dp-stat-lbl">Dias Consec.</div>
-          </div>
-          <div class="dp-stat">
-            <div class="dp-stat-val">${r.total_dias}</div>
-            <div class="dp-stat-lbl">Total Dias</div>
-          </div>
-          <div class="dp-stat">
-            <div class="dp-stat-val">${r.total_rotas}</div>
-            <div class="dp-stat-lbl">Total Rotas</div>
-          </div>
-          <div class="dp-stat">
-            <div class="dp-stat-val">${totalInsuc}</div>
-            <div class="dp-stat-lbl">Insucessos</div>
-          </div>
-          <div class="dp-stat">
-            <div class="dp-stat-val">${avgDS}%</div>
-            <div class="dp-stat-lbl">DS Médio</div>
-          </div>
-          <div class="dp-stat" style="background:${alertColor}22;border:1px solid ${alertColor}">
-            <div class="dp-stat-val" style="color:${alertColor}">${alertLabel}</div>
-            <div class="dp-stat-lbl">${r.streak_inicio ? fmtDate(r.streak_inicio)+' → '+fmtDate(r.streak_fim) : 'sem sequência'}</div>
-          </div>
-        </div>
-        <button class="btn-filter" style="align-self:flex-start;white-space:nowrap" onclick="filterByDriver('${r.driver}');document.getElementById('driver-profile-area').innerHTML=''">Ver na tabela →</button>
-      </div>`;
-  }
-  html += '</div>';
-  if (matches.length === 10) html += '<div style="font-size:.72rem;color:var(--g400);margin-top:6px;font-style:italic">Exibindo os 10 primeiros resultados. Refine a pesquisa para ver menos.</div>';
-  area.innerHTML = html;
-}
-
-
 function jRender() {
   let src=[...jFiltered];
   if(jSearch) src=src.filter(r=>Object.values(r).some(v=>String(v??'').toLowerCase().includes(jSearch)));
@@ -939,7 +643,6 @@ function jRender() {
   document.getElementById('j-kMLPs').textContent=top?top[1]+' drivers em alerta':'';
   jRenderCharts(src);
   renderOffenders(src);
-  renderInsucessosOffenders();
 
   const tp=Math.max(1,Math.ceil(src.length/J_PS));
   if(jPage>tp) jPage=tp;
